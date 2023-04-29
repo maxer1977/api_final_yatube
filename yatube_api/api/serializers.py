@@ -10,7 +10,6 @@ class PostSerializer(serializers.ModelSerializer):
     Сериализатор для модели Post.
     В поле автор подменяется значение ключа-индекса на username.
     """
-
     author = serializers.SlugRelatedField(
         many=False, read_only=True, slug_field='username')
 
@@ -22,7 +21,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 class GroupSerializer(serializers.ModelSerializer):
     """Сериализатор для модели Group."""
-
     class Meta:
         model = Group
         fields = ('id', 'title', 'slug', 'description')
@@ -34,7 +32,6 @@ class CommentSerializer(serializers.ModelSerializer):
     Сериализатор для модели Comments.
     В поле автор подменяется значение ключа-индекса на username.
     """
-
     author = serializers.SlugRelatedField(
         many=False, read_only=True, slug_field='username')
 
@@ -50,7 +47,6 @@ class FollowSerializer(serializers.ModelSerializer):
     Для записи/вывода полей user (подписчик) и following (автор)
     подставляются значения поля username, но сохраняется id.
     """
-
     user = serializers.SlugRelatedField(
         many=False, read_only=False, slug_field='username',
         queryset=User.objects.all(), default=serializers.CurrentUserDefault())

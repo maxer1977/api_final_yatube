@@ -2,14 +2,14 @@ from api.serializers import (CommentSerializer, FollowSerializer,
                              GroupSerializer, PostSerializer)
 from django.shortcuts import get_object_or_404
 from posts.models import Group, Post
-from rest_framework import filters, mixins, permissions, viewsets
+from rest_framework import filters, permissions, viewsets
 
 from .permissions import AuthorOrReadOnly, ReadOnly
+from .mixins import CreateListViewSet
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     """Управление функциями для работы с комментариями."""
-
     serializer_class = CommentSerializer
     permission_classes = (AuthorOrReadOnly,)
 
@@ -45,7 +45,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class PostViewSet(viewsets.ModelViewSet):
     """Управление функциями для работы с постами."""
-
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (AuthorOrReadOnly,)
@@ -72,20 +71,9 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     Управление функциями для работы с группами постов.
     Доступно только чтение любой категории пользователей.
     """
-
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (permissions.AllowAny,)
-
-
-class CreateListViewSet(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    """
-    Базовый класс с возможностью !только! создания записей и получения списка.
-    """
-
-    pass
 
 
 class FollowViewSet(CreateListViewSet):
@@ -93,7 +81,6 @@ class FollowViewSet(CreateListViewSet):
     Управление функциями для работы с подписками.
     Только создание записи и солучение списка подписок.
     """
-
     serializer_class = FollowSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username',)
